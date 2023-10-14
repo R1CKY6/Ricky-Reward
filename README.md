@@ -18,7 +18,7 @@
 5. Start the server.
 
 [Video Preview](https://www.youtube.com/watch?v=u0cNFk9s1P8) | 
-[Forum CFX](https://forum.cfx.re/t/release-free-esx-advanced-report-system/5172683)
+[Forum CFX](https://forum.cfx.re/t/release-free-esx-qbcore-advanced-reward-system/5177016)
 
 # Support
 [Join Here for free support](https://discord.gg/tHAbhd94vS)
