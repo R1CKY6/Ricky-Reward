@@ -17,7 +17,7 @@
 4. Add `ensure Ricky-Reward` in your server.cfg
 5. Start the server.
 
-[Video Preview](https://www.youtube.com/watch?v=u0cNFk9s1P8)
+[Video Preview](https://www.youtube.com/watch?v=u0cNFk9s1P8)<br>
 [Forum CFX](https://forum.cfx.re/t/release-free-esx-advanced-report-system/5172683)
 
 # Support
