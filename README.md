@@ -1,6 +1,10 @@
 # **Ricky-Reward**
 *Advanced Reward | FiveM*
 
+# Preview
+![preview_reward](https://github.com/R1CKY6/Ricky-Reward/assets/100082886/88c0c7f0-b321-4f65-abdb-655c455b16b3)
+
+
 # Dependecies
 - esx/qbcore
 - oxmysql
