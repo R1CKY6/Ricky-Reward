@@ -1,0 +1,518 @@
+<html>
+    <head>
+        <title>Tech Development - Reward</title>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <link rel="stylesheet" href="./css/style.css">
+    </head>
+    <body>
+
+        <div id="app">
+            <div class="h-full w-full flex justify-center items-center">
+
+                <transition name="bestTransition">
+                    <div v-if="screen=='history' && this.rewardInfo != false" class="absolute h-[73.4%] w-[22.6%] right-[1.5%] bg-cover bg-no-repeat object-cover bg-[url('./img/container2.png')] flex justify-center">
+                        <span class="text-[2.5rem] absolute top-[1%]">{{upper(locales.reward_info)}}</span>
+                        <span class="text-[1.5625rem] absolute top-[9%]">{{locales.created}} : {{rewardInfo.date}}</span>
+                        <div v-if="rewardInfo.data.type=='money'" class="h-[38%] w-[95%] absolute overflow-y-auto top-[15%] text-[1.5625rem] text-center flex items-center flex-col">
+                            <span>{{locales.type}} : {{rewardInfo.data.typeLabel}}</span>
+                            <span>{{locales.account}} : {{rewardInfo.data.accountLabel}}</span>
+                            <span>{{locales.amount}} : {{rewardInfo.data.amount}}{{locales.currency}}</span>
+                            <span>{{locales.custom_message}} :</span>
+                            <span class="text-[1.25rem] text-[#ABA3A3]">{{rewardInfo.message || locales.none}}</span>
+                        </div>
+                        <div v-if="rewardInfo.data.type=='car'" class="h-[38%] w-[95%] absolute overflow-y-auto top-[15%] text-[1.5625rem] text-center flex items-center flex-col">
+                            <span>{{locales.type}} : {{rewardInfo.data.typeLabel}}</span>
+                            <span>{{locales.car}} : {{rewardInfo.data.car}}</span>
+                            <span>{{locales.custom_plate}} : {{rewardInfo.data.plate || locales.none}}</span>
+                            <span>{{locales.redeemed_from}} : <span class="cursor-pointer" @click="copyIdentifier()">{{rewardInfo.userInfo.name || upper(locales.none)}}</span></span>
+                            <span>{{locales.custom_message}} :</span>
+                            <span class="text-[1.25rem] text-[#ABA3A3]">{{rewardInfo.message || locales.none}}</span>
+                        </div>
+
+                        <div class="h-[45%] w-[99.5%] absolute bottom-[0%] flex justify-center border-t-[1px] border-t-[#F4AF29]">
+                            <span class="text-[2.5rem] absolute top-[1%]">{{upper(locales.actions)}}</span>
+
+                            <div @click="copy(rewardInfo.code, true)" style="box-shadow: 0px 0px 80px 0px #FFD873;" class="bg-[#FFD873] text-[1.875rem] flex items-center justify-center h-[13.7%] w-[46.8%] absolute top-[19.3%] rounded-[5px] cursor-pointer">
+                                <span v-if="!codeCopied">{{upper(locales.copy_code)}}</span>
+                                <span v-if="codeCopied">{{upper(locales.copied)}}</span>
+                            </div>
+
+                            <div @click="viewRewardInfo(false)" style="box-shadow: 0px 0px 80px 0px #8C8BDE;" class="bg-[#8C8BDE] text-[1.875rem] flex items-center justify-center h-[13.7%] w-[46.8%] absolute top-[40.3%] rounded-[5px] cursor-pointer">
+                                <span>{{upper(locales.close)}}</span>
+                            </div>
+                        </div>
+                    </div>                        
+                </transition>
+
+                <transition name="bestTransition">
+                    <div v-if="screen=='createdreward' && this.rewardInfo != false" class="absolute h-[73.4%] w-[22.6%] right-[1.5%] bg-cover bg-no-repeat object-cover bg-[url('./img/container2.png')] flex justify-center">
+                        <span class="text-[2.5rem] absolute top-[1%]">{{upper(locales.reward_info)}}</span>
+                        <span class="text-[1.5625rem] absolute top-[9%]">{{locales.created}} : {{rewardInfo.date}}</span>
+                        <div v-if="rewardInfo.data.type=='money'" class="h-[38%] w-[95%] absolute overflow-y-auto top-[15%] text-[1.5625rem] text-center flex items-center flex-col">
+                            <span>{{locales.type}} : {{rewardInfo.data.typeLabel}}</span>
+                            <span>{{locales.account}} : {{rewardInfo.data.accountLabel}}</span>
+                            <span>{{locales.amount}} : {{rewardInfo.data.amount}}{{locales.currency}}</span>
+                            <span>{{locales.redeemed_from}} : <span class="cursor-pointer" @click="copyIdentifier()">{{rewardInfo.userInfo.name || upper(locales.none)}}</span></span>
+                            <span>{{locales.custom_message}} :</span>
+                            <span class="text-[1.25rem] text-[#ABA3A3]">{{rewardInfo.message || locales.none}}</span>
+                        </div>
+                        <div v-if="rewardInfo.data.type=='car'" class="h-[38%] w-[95%] absolute overflow-y-auto top-[15%] text-[1.5625rem] text-center flex items-center flex-col">
+                            <span>{{locales.type}} : {{rewardInfo.data.typeLabel}}</span>
+                            <span>{{locales.car}} : {{rewardInfo.data.car}}</span>
+                            <span>{{locales.custom_plate}} : {{rewardInfo.data.plate || locales.none}}</span>
+                            <span>{{locales.redeemed_from}} : <span class="cursor-pointer" @click="copyIdentifier()">{{rewardInfo.userInfo.name || upper(locales.none)}}</span></span>
+                            <span>{{locales.custom_message}} :</span>
+                            <span class="text-[1.25rem] text-[#ABA3A3]">{{rewardInfo.message || locales.none}}</span>
+                        </div>
+
+                        <div class="h-[45%] w-[99.5%] absolute bottom-[0%] flex justify-center border-t-[1px] border-t-[#F4AF29]">
+                            <span class="text-[2.5rem] absolute top-[1%]">{{upper(locales.actions)}}</span>
+
+                            <div v-if="!rewardInfo.userInfo.name" @click="deleteReward()" style="box-shadow: 0px 0px 80px 0px #B91010;" class="bg-[#B91010] text-[1.875rem] flex items-center justify-center h-[13.7%] w-[46.8%] absolute top-[19.3%] rounded-[5px] cursor-pointer">
+                                <span>{{upper(locales.delete)}}</span>
+                            </div>
+
+                            <div @click="copy(rewardInfo.code, true)" style="box-shadow: 0px 0px 80px 0px #FFD873;" class="bg-[#FFD873] text-[1.875rem] flex items-center justify-center h-[13.7%] w-[46.8%] absolute top-[40.3%] rounded-[5px] cursor-pointer">
+                                <span v-if="!codeCopied">{{upper(locales.copy_code)}}</span>
+                                <span v-if="codeCopied">{{upper(locales.copied)}}</span>
+                            </div>
+
+                            <div @click="viewRewardInfo(false)" style="box-shadow: 0px 0px 80px 0px #8C8BDE;" class="bg-[#8C8BDE] text-[1.875rem] flex items-center justify-center h-[13.7%] w-[46.8%] absolute top-[60.3%] rounded-[5px] cursor-pointer">
+                                <span>{{upper(locales.close)}}</span>
+                            </div>
+                        </div>
+                    </div>                        
+                </transition>
+
+
+                <div class="relative h-[87.5%] w-[48.8%] object-cover bg-cover bg-no-repeat bg-[url('./img/container.png')] flex justify-center">
+
+                    <div class="h-[7%] w-full flex items-center justify-center">
+                        <div v-if="staff" v-bind:style="getColorSelect('createreward')" @click="changeScreen('createreward')" class="h-full w-[28%] border-[1px] border-[#F4AF29] flex items-center justify-center cursor-pointer">
+                            <div><h1 class="scrittar">{{upper(locales.create_reward)}}</h1></div>
+                        </div>
+                        <div v-if="staff" v-bind:style="getColorSelect('createdreward')" @click="changeScreen('createdreward')" class="h-full w-[28%] border-[1px] border-[#F4AF29] flex items-center justify-center cursor-pointer">
+                            <div><h1 class="scrittar">{{upper(locales.created_reward)}}</h1></div>
+                        </div>
+                        <div v-if="!staff" v-bind:style="getColorSelect('redeem_code')" @click="changeScreen('redeem_code')" class="h-full w-[28%] border-[1px] border-[#F4AF29] flex items-center justify-center cursor-pointer">
+                            <div><h1 class="scrittar">{{upper(locales.redeem_code)}}</h1></div>
+                        </div>
+                        <div v-if="!staff" v-bind:style="getColorSelect('history')" @click="changeScreen('history')" class="h-full w-[28%] border-[1px] border-[#F4AF29] flex items-center justify-center cursor-pointer">
+                            <div><h1 class="scrittar">{{upper(locales.history)}}</h1></div>
+                        </div>
+                    </div>
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='history'" class="h-full w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{locales.reward_redeemed.replace("%s", userReward.length)}}</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[7%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.history)}}</h1>
+                            </div>
+
+                            <div class="h-[70.6%] w-[52.5%] absolute top-[14.8%] overflow-y-auto">
+
+                                <div v-for="(v,k) in userReward" class="h-[16.2%] relative w-full bg-no-repeat bg-cover object-cover bg-[url('./img/created_reward.png')] mb-[6.3%]">
+                                    <span class="absolute left-[3%] top-[10%] text-[1.875rem]">{{upper(v.data.typeLabel)}}</span>
+                                    <span v-bind:style="blurCode(v)" class="text-[0.9375rem] relative left-[3%] top-[55%]">{{v.code}}</span>
+
+                                    <div @click="viewRewardInfo(v)" style="box-shadow: 0px 0px 80px 0px #AB972F;" class="h-[42.1%] w-[31%] absolute right-[5.7%] top-[30%] rounded-[5px] bg-[#AB972F] flex items-center justify-center cursor-pointer">
+                                        <span class="text-[1.25rem]">{{upper(locales.view_info)}}</span>
+                                    </div>
+                                    <div @click="hideCode(v,k, true)" v-if="v.viewCode" class="h-[20%] w-[5%] cursor-pointer relative left-[30.1%] top-[33%] flex items-center justify-center">
+                                        <img src="./img/eyeclose.png" alt="">
+                                    </div>
+
+                                    <div @click="viewCode(v,k, true)" v-if="!v.viewCode" class="h-[20%] w-[5%] cursor-pointer relative left-[30.1%] top-[33%] flex items-center justify-center">
+                                        <img src="./img/eye.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </transition>
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='redeem_code'" class="h-full w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{upper(locales.hi)}}, {{upper(name)}}</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[7%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.redeem_code)}}</h1>
+                            </div>
+
+                            <div class="absolute top-[22%] flex items-center justify-center h-[11.6%] w-[36.3%] bg-cover object-cover bg-no-repeat bg-[url('./img/input.png')]">
+                                <input v-model="code" type="text" class="h-full w-[90%] bg-[transparent] text-center text-[2.1875rem]" :placeholder="upper(locales.type_code)">
+                            </div>
+
+                            <div @click="redeemCode()" style="box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80px 0px #7BC144;" class="h-[10%] w-[30.9%] absolute bottom-[43.1%] bg-[#7BC144] cursor-pointer  rounded-[10px] flex items-center justify-center top-[40.5%]">
+                                <span class="text-[2.1875rem]">{{upper(locales.redeem)}}</span>
+                            </div>
+
+                            <transition name="opacity">
+                                <div v-if="errorCode" class="text-[2.1875rem] absolute bottom-[15%] text-[#FF2020]" >{{locales.code_error}}</div>
+                            </transition>
+                        </div>
+                    </transition>
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='createdreward'" class="h-full w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{locales.reward_created.replace("%s", createdReward.length)}}</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[7%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.created_reward)}}</h1>
+                            </div>
+
+                            <div class="h-[70.6%] w-[52.5%] absolute top-[14.8%] overflow-y-auto">
+
+                                <div v-for="(v,k) in createdReward" class="h-[16.2%] relative w-full bg-no-repeat bg-cover object-cover bg-[url('./img/created_reward.png')] mb-[6.3%]">
+                                    <span class="absolute left-[3%] top-[10%] text-[1.875rem]">{{upper(v.data.typeLabel)}}</span>
+                                    <span v-bind:style="blurCode(v)" class="text-[0.9375rem] relative left-[3%] top-[55%]">{{v.code}}</span>
+
+                                    <div @click="viewRewardInfo(v)" style="box-shadow: 0px 0px 80px 0px #AB972F;" class="h-[42.1%] w-[31%] absolute right-[5.7%] top-[30%] rounded-[5px] bg-[#AB972F] flex items-center justify-center cursor-pointer">
+                                        <span class="text-[1.25rem]">{{upper(locales.actions)}}</span>
+                                    </div>
+                                    <div @click="hideCode(v,k)" v-if="v.viewCode" class="h-[20%] w-[5%] cursor-pointer relative left-[30.1%] top-[33%] flex items-center justify-center">
+                                        <img src="./img/eyeclose.png" alt="">
+                                    </div>
+
+                                    <div @click="viewCode(v,k)" v-if="!v.viewCode" class="h-[20%] w-[5%] cursor-pointer relative left-[30.1%] top-[33%] flex items-center justify-center">
+                                        <img src="./img/eye.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                    </transition>
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='createreward'" class="h-[80%] w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{upper(locales.step)}} 1.</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[9%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.reward_type)}}</h1>
+                            </div>
+
+                            <transition name="rewardType">
+                                <div v-if="animazione.reward" class="absolute top-[22%] flex items-center justify-center h-[11.6%] w-[29.1%] bg-cover object-cover bg-no-repeat bg-[url('./img/input.png')]">
+                                    <h1 class="text-[2.1875rem]">{{upper(rewardType[selectedReward].label)}}</h1>
+                                </div>
+                            </transition>
+
+                            <div class="h-full w-full absolute top-[14%] left-[18.4%]">
+                                <svg @click="previousReward()" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="193" height="209" viewBox="0 0 193 209" fill="none">
+                                    <g filter="url(#filter0_dd_11_67)">
+                                      <path d="M82.0174 101.943L102.471 81.4902C103.884 80.0766 106.17 80.0766 107.569 81.4902L110.968 84.8891C112.381 86.3027 112.381 88.5887 110.968 89.9873L96.485 104.5L110.983 118.998C112.396 120.411 112.396 122.697 110.983 124.096L107.584 127.51C106.17 128.923 103.884 128.923 102.486 127.51L82.0324 107.057C80.6037 105.643 80.6037 103.357 82.0174 101.943Z" fill="#F4AF29"/>
+                                    </g>
+                                    <defs>
+                                      <filter id="filter0_dd_11_67" x="0.959" y="0.429993" width="191.084" height="208.14" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                        <feOffset dy="4"/>
+                                        <feGaussianBlur stdDeviation="2"/>
+                                        <feComposite in2="hardAlpha" operator="out"/>
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11_67"/>
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                        <feOffset/>
+                                        <feGaussianBlur stdDeviation="40"/>
+                                        <feComposite in2="hardAlpha" operator="out"/>
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0.956863 0 0 0 0 0.686275 0 0 0 0 0.160784 0 0 0 1 0"/>
+                                        <feBlend mode="normal" in2="effect1_dropShadow_11_67" result="effect2_dropShadow_11_67"/>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_11_67" result="shape"/>
+                                      </filter>
+                                    </defs>
+                                  </svg>
+                            </div>
+
+                            <div class="h-full w-full absolute top-[14%] left-[60.8%]">
+                                <svg @click="nextReward()" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="193" height="209" viewBox="0 0 193 209" fill="none">
+                                    <g filter="url(#filter0_dd_11_69)">
+                                      <path d="M110.983 101.943L90.5295 81.4902C89.1158 80.0766 86.8299 80.0766 85.4313 81.4902L82.0324 84.8891C80.6188 86.3027 80.6188 88.5887 82.0324 89.9873L96.5151 104.5L82.0174 118.998C80.6037 120.411 80.6037 122.697 82.0174 124.096L85.4162 127.51C86.8299 128.923 89.1158 128.923 90.5145 127.51L110.968 107.057C112.396 105.643 112.396 103.357 110.983 101.943Z" fill="#F4AF29"/>
+                                    </g>
+                                    <defs>
+                                      <filter id="filter0_dd_11_69" x="0.957138" y="0.429993" width="191.084" height="208.14" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                        <feOffset dy="4"/>
+                                        <feGaussianBlur stdDeviation="2"/>
+                                        <feComposite in2="hardAlpha" operator="out"/>
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11_69"/>
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                        <feOffset/>
+                                        <feGaussianBlur stdDeviation="40"/>
+                                        <feComposite in2="hardAlpha" operator="out"/>
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0.956863 0 0 0 0 0.686275 0 0 0 0 0.160784 0 0 0 1 0"/>
+                                        <feBlend mode="normal" in2="effect1_dropShadow_11_69" result="effect2_dropShadow_11_69"/>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_11_69" result="shape"/>
+                                      </filter>
+                                    </defs>
+                                  </svg>
+                            </div>
+
+
+                            <div @click="nextStep()" style="box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80px 0px #F4AF29;" class="h-[13%] w-[30.9%] absolute bottom-[43.1%] bg-[#F4AF29] cursor-pointer  rounded-[10px] flex items-center justify-center">
+                                <span class="text-[2.1875rem]">{{upper(locales.next)}}</span>
+                            </div>
+
+                        </div>
+                    </transition>
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='moneytwo'" class="h-[80%] w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{upper(locales.step)}} 2.</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[9%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.money_reward)}}</h1>
+                            </div>
+
+                            <transition name="rewardType">
+                                <div v-if="animazione.reward" class="absolute top-[22%] flex items-center justify-center h-[11.6%] w-[29.1%] bg-cover object-cover bg-no-repeat bg-[url('./img/input.png')]">
+                                    <h1 class="text-[2.1875rem]">{{upper(moneyType[moneyTypeSelected].label)}}</h1>
+                                </div>
+                            </transition>
+
+                            <div class="h-full w-full absolute top-[14%] left-[18.4%]">
+                                <svg @click="previousMoneyType()" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="193" height="209" viewBox="0 0 193 209" fill="none">
+                                    <g filter="url(#filter0_dd_11_67)">
+                                      <path d="M82.0174 101.943L102.471 81.4902C103.884 80.0766 106.17 80.0766 107.569 81.4902L110.968 84.8891C112.381 86.3027 112.381 88.5887 110.968 89.9873L96.485 104.5L110.983 118.998C112.396 120.411 112.396 122.697 110.983 124.096L107.584 127.51C106.17 128.923 103.884 128.923 102.486 127.51L82.0324 107.057C80.6037 105.643 80.6037 103.357 82.0174 101.943Z" fill="#F4AF29"/>
+                                    </g>
+                                    <defs>
+                                      <filter id="filter0_dd_11_67" x="0.959" y="0.429993" width="191.084" height="208.14" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                        <feOffset dy="4"/>
+                                        <feGaussianBlur stdDeviation="2"/>
+                                        <feComposite in2="hardAlpha" operator="out"/>
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11_67"/>
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                        <feOffset/>
+                                        <feGaussianBlur stdDeviation="40"/>
+                                        <feComposite in2="hardAlpha" operator="out"/>
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0.956863 0 0 0 0 0.686275 0 0 0 0 0.160784 0 0 0 1 0"/>
+                                        <feBlend mode="normal" in2="effect1_dropShadow_11_67" result="effect2_dropShadow_11_67"/>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_11_67" result="shape"/>
+                                      </filter>
+                                    </defs>
+                                  </svg>
+                            </div>
+
+                            <div class="absolute h-[11.6%] w-[29.1%] bg-cover object-cover bg-no-repeat bg-[url('./img/input.png')] top-[37%]">
+                                <input v-model="moneyInfo.amount" type="number" class="h-full w-full bg-[transparent] text-[2.1875rem] text-center" :placeholder="upper(locales.amount)">
+                            </div>
+
+                            <div v-bind:style="getIfNext('money')" @click="lastStep(getIfNext2('money'))" style="box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80px 0px #F4AF29;" class="duration-[1s] h-[13%] w-[30.9%] absolute bottom-[43.1%] bg-[#F4AF29] cursor-pointer  rounded-[10px] flex items-center justify-center top-[58%]">
+                                <span class="text-[2.1875rem]">{{upper(locales.next)}}</span>
+                            </div>
+
+                            <div class="h-full w-full absolute top-[14%] left-[60.8%]">
+                                <svg @click="nextMoneyType()" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="193" height="209" viewBox="0 0 193 209" fill="none">
+                                    <g filter="url(#filter0_dd_11_69)">
+                                      <path d="M110.983 101.943L90.5295 81.4902C89.1158 80.0766 86.8299 80.0766 85.4313 81.4902L82.0324 84.8891C80.6188 86.3027 80.6188 88.5887 82.0324 89.9873L96.5151 104.5L82.0174 118.998C80.6037 120.411 80.6037 122.697 82.0174 124.096L85.4162 127.51C86.8299 128.923 89.1158 128.923 90.5145 127.51L110.968 107.057C112.396 105.643 112.396 103.357 110.983 101.943Z" fill="#F4AF29"/>
+                                    </g>
+                                    <defs>
+                                      <filter id="filter0_dd_11_69" x="0.957138" y="0.429993" width="191.084" height="208.14" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                        <feOffset dy="4"/>
+                                        <feGaussianBlur stdDeviation="2"/>
+                                        <feComposite in2="hardAlpha" operator="out"/>
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11_69"/>
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                        <feOffset/>
+                                        <feGaussianBlur stdDeviation="40"/>
+                                        <feComposite in2="hardAlpha" operator="out"/>
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0.956863 0 0 0 0 0.686275 0 0 0 0 0.160784 0 0 0 1 0"/>
+                                        <feBlend mode="normal" in2="effect1_dropShadow_11_69" result="effect2_dropShadow_11_69"/>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_11_69" result="shape"/>
+                                      </filter>
+                                    </defs>
+                                  </svg>
+                            </div>
+                        </div>
+
+
+                    </transition>
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='customMessage'" class="h-[80%] w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{upper(locales.step)}} 3.</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[9%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.custom_message)}}</h1>
+                            </div>
+
+
+
+                            <div class="absolute top-[22%] flex items-center justify-center h-[11.6%] w-[29.1%] bg-cover object-cover bg-no-repeat bg-[url('./img/input.png')]">
+                                <input v-model="customMessage" type="text" class="h-full w-[90%] bg-[transparent] text-center text-[2.1875rem]" :placeholder="upper(locales.custom_message)">
+                            </div>
+
+                            <div @click="createReward()" style="box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80px 0px #F4AF29;" class="h-[13%] w-[30.9%] absolute bottom-[43.1%] bg-[#F4AF29] cursor-pointer rounded-[10px] flex items-center justify-center top-[51%]">
+                                <span class="text-[2.1875rem]">{{upper(locales.create)}}</span>
+                            </div>
+
+                            <span class="absolute top-[37%] text-[1.25rem]">{{locales.custom_message_nb}}</span>
+                        </div>
+                    </transition>
+                    
+
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='cartwo'" class="h-[80%] w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{upper(locales.step)}} 2.</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[9%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.vehicle_reward)}}</h1>
+                            </div>
+
+                            <transition name="rewardType">
+                                <div v-if="animazione.reward" class="absolute top-[22%] flex items-center justify-center h-[11.6%] w-[29.1%] bg-cover object-cover bg-no-repeat bg-[url('./img/input.png')]">
+                                    <input v-model="car" type="text" class="h-full w-[90%] bg-[transparent] text-center text-[2.1875rem]" :placeholder="upper(locales.car)">
+                                </div>
+                            </transition>
+
+                            <transition name="opacity">
+                                <div v-if="checkbox.car" class="absolute top-[46.3%] flex items-center justify-center h-[11.6%] w-[29.1%] bg-cover object-cover bg-no-repeat bg-[url('./img/input.png')]">
+                                    <input v-model="customplate" type="text" class="h-full w-[90%] bg-[transparent] text-center text-[2.1875rem]" :placeholder="upper(locales.custom_plate)">
+                                </div>
+                            </transition>
+
+
+                            <transition name="opacity">
+                                <div v-if="!checkbox.car" @click="changeValueCheckbox('car', true)" class="h-[5.5%] w-[4.5%] absolute top-[37%] left-[35.5%] bg-cover object-cover bg-no-repeat bg-[url('./img/checkbox.png')] cursor-pointer"></div>
+                            </transition>
+
+                            <transition name="opacity">
+                                <div v-if="checkbox.car" @click="changeValueCheckbox('car', false)" class="h-[5.5%] w-[4.5%] absolute top-[37%] left-[35.5%] bg-cover object-cover bg-no-repeat bg-[url('./img/checkbox_checked.png')] cursor-pointer"></div>
+                            </transition>
+
+                            <span class="absolute top-[37%] text-[1.875rem]">{{upper(locales.custom_plate)}}</span>
+
+
+
+
+                            <div v-bind:style="getIfNext('car')" @click="lastStep(getIfNext2('car'), true)" style="box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80px 0px #F4AF29;" class="duration-[1s] h-[13%] w-[30.9%] absolute bottom-[43.1%] bg-[#F4AF29] cursor-pointer  rounded-[10px] flex items-center justify-center top-[68%]">
+                                <span class="text-[2.1875rem]">{{upper(locales.next)}}</span>
+                            </div>
+
+                            <transition name="opacity">
+                                <div v-if="errorVehicle" class="text-[2.1875rem] absolute bottom-[5%] text-[#FF2020]" >{{locales.no_vehicle}}</div>
+                            </transition>
+
+                        </div>
+                    </transition>
+                    
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='rewardinfouser'" class="h-[80%] w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{upper(locales.congratulations)}}</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[9%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.redeemed_successfully)}}</h1>
+                            </div>
+
+                            <span class="text-[3.75rem] text-[#FFD873] absolute top-[17.5%]">{{locales.reward_info}}</span>
+
+                            <div class="relative h-[30%] top-[-7%] w-[90%]">
+                                <div v-if="dataReward.type=='money'" class="h-full w-full flex items-center text-[1.875rem] flex-col">
+                                    <div>{{locales.type}}: {{dataReward.typeLabel}}</div>
+                                    <div>{{locales.account}}: {{dataReward.accountLabel}}</div>
+                                    <div>{{locales.amount}}: {{dataReward.amount}}{{locales.currency}}</div>
+                                    <div>{{locales.custom_message}}</div>
+                                </div>
+                                <div v-if="dataReward.type=='car'" class="h-full w-full flex items-center text-[1.875rem] flex-col">
+                                    <div>{{locales.type}}: {{dataReward.typeLabel}}</div>
+                                    <div>{{locales.car}}: {{dataReward.car}}</div>
+                                    <div>{{locales.custom_plate}}: {{dataReward.plate || locales.none}}</div>
+                                    <div>{{locales.custom_message}}</div>
+                                </div>
+                            </div>
+
+                            <div class="h-[5%] w-[90%] absolute top-[52%] text-center">
+                                <div class="text-[1.875rem] text-[#B7AEAE]">{{customMessage || locales.none}}</div>
+                            </div>
+                            
+
+
+                            <div @click="changeScreen('redeem_code')" style="box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80px 0px #7BC144;" class="h-[13%] w-[30.9%] absolute bottom-[43.1%] bg-[#7BC144] cursor-pointer  rounded-[10px] flex items-center justify-center top-[74.5%]">
+                                <span class="text-[2.1875rem]">{{upper(locales.return_menu)}}</span>
+                            </div>
+
+                        </div>
+                    </transition>
+
+                    <transition name="bestTransition">
+                        <div v-if="screen=='rewardinfo'" class="h-[80%] w-full absolute top-[10%] flex items-center justify-center">
+                            <div class="h-[5%] w-full absolute top-[2%] flex items-center justify-center">
+                                <h1 class="scrittar">{{upper(locales.congratulations)}}</h1>
+                            </div>
+
+                            <div class="absolute w-full h-[7.4%] top-[9%] flex items-center justify-center">
+                                <h1 class="text-[3.75rem]">{{upper(locales.created_successfully)}}</h1>
+                            </div>
+
+                            <span class="text-[3.75rem] text-[#FFD873] absolute top-[17.5%]">{{locales.reward_info}}</span>
+
+                            <div class="relative h-[30%] top-[-7%] w-[90%]">
+                                <div v-if="selectedReward==0" class="h-full w-full flex items-center text-[1.875rem] flex-col">
+                                    <div>{{locales.type}}: {{locales.money}}</div>
+                                    <div>{{locales.account}}: {{this.moneyInfo.label}}</div>
+                                    <div>{{locales.amount}}: {{this.moneyInfo.amount}}{{locales.currency}}</div>
+                                    <div>{{locales.custom_message}}</div>
+                                </div>
+                                <div v-if="selectedReward==1" class="h-full w-full flex items-center text-[1.875rem] flex-col">
+                                    <div>{{locales.type}}: {{locales.car_type}}</div>
+                                    <div>{{locales.car}}: {{this.car}}</div>
+                                    <div>{{locales.custom_plate}}: {{this.customplate || locales.none}}</div>
+                                    <div>{{locales.custom_message}}</div>
+                                </div>
+                            </div>
+
+                            <div class="h-[5%] w-[90%] absolute top-[52%] text-center">
+                                <div class="text-[1.875rem] text-[#B7AEAE]">{{customMessage || locales.none}}</div>
+                            </div>
+                            
+
+
+                            <div @click="changeScreen('createreward')" style="box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80px 0px #7BC144;" class="h-[13%] w-[30.9%] absolute bottom-[43.1%] bg-[#7BC144] cursor-pointer  rounded-[10px] flex items-center justify-center top-[74.5%] right-[15.4%]">
+                                <span class="text-[2.1875rem]">{{upper(locales.return_menu)}}</span>
+                            </div>
+
+                            <div @click="copyCode()" style="box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80px 0px #FFD873;" class="h-[13%] w-[30.9%] absolute bottom-[43.1%] bg-[#FFD873] cursor-pointer  rounded-[10px] flex items-center justify-center top-[74.5%] left-[15.4%]">
+                                <span v-if="codeCopied" class="text-[2.1875rem]">{{upper(locales.copied)}}</span>
+                                <span v-if="!codeCopied" class="text-[2.1875rem]">{{upper(locales.copy_code)}}</span>
+                            </div>
+
+                        </div>
+                    </transition>
+
+
+                </div>
+            </div>
+        </div>
+        
+
+        <script src='https://code.jquery.com/jquery-3.1.1.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js'></script>
+        <script src="./js/script.js"></script>
+        <script src='https://cdn.tailwindcss.com'></script>
+    </body>
+</html>

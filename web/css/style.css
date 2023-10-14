@@ -1,0 +1,107 @@
+@font-face {
+    font-family: 'Main Font';
+    src: url(../fonts/font.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    font-family: 'Main Font';
+    color: white;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.11em;
+    overflow: hidden;
+}
+
+
+#app {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: radial-gradient(81.11% 81.11% at 50% 50%, #000 0%, rgba(0, 0, 0, 0.00) 100%), radial-gradient(100% 100% at 50% 100%, rgba(199, 140, 25, 0.41) 0%, rgba(0, 0, 0, 0.00) 100%), radial-gradient(100% 100% at 50% 0%, rgba(199, 140, 25, 0.41) 0%, rgba(0, 0, 0, 0.00) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.55) 100%)
+}
+
+
+.scrittar {
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+    font-size: 1.875rem !important;
+}
+
+@keyframes opacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes bestTransition {
+    0% {
+        transform: translateX(100vh);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes rewardType {
+    0% {
+        transform: translateY(-30vw);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.rewardType-enter-active {
+    animation: rewardType 0.5s ease-out;
+}
+
+.rewardType-leave-active {
+    animation: rewardType 0.5s ease-out reverse;
+}
+
+.bestTransition-enter-active {
+    animation: bestTransition 0.5s ease-out;
+}
+
+.bestTransition-leave-active {
+    animation: bestTransition 0.5s ease-out reverse;
+}
+
+.opacity-enter-active {
+    animation: opacity 0.5s ease-out;
+}
+
+.opacity-leave-active {
+    animation: opacity 0.5s ease-out reverse;
+}
+
+input:focus {
+    outline: none;
+}
+
+input::placeholder {
+    color: white;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+::-webkit-scrollbar {
+    display: none;
+}
