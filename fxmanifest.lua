@@ -6,7 +6,7 @@ lua54 'yes'
 game 'gta5' 
 
 author 'R1CKY®#2220'
-description 'Tech Development - Reward System'
+description 'Tech Development - Advanced Reward System'
 version '1.0'
 
 
