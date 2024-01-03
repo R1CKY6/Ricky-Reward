@@ -23,7 +23,7 @@ Config.Locales = {
     ['next'] = "Next",
     ['money_reward'] = "Money Reward",
     ['amount'] = "Amount",
-    ['custom_message'] = "Custom Message",
+    ['custom_message'] = "Custom Message:",
     ['custom_message_nb'] = "This message will be displayed when the player redeems this item.",
     ['create'] = "Create",
     ['vehicle_reward'] = "Vehicle Reward",
@@ -60,7 +60,10 @@ Config.Locales = {
     ['reward_created'] = "You have created %s rewards",
     ['reward_redeemed'] = "You have redeemed %s rewards",
     ['redeemed_successfully'] = "Redeemed Successfully",
-    ['hi'] = "Hi"
+    ['hi'] = "Hi",
+    ['item_reward'] = "Item Reward",
+    ['item_label'] = "Item",
+    ['item_name'] = "Item Name"
 }
 
 
