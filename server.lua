@@ -176,6 +176,14 @@ Citizen.CreateThread(function()
             local data = json.decode(result[1].data)
             local xPlayer = GetPlayer(source)
             TriggerClientEvent('ricky-reward:giveCar', source, data)
+        elseif json.decode(result[1].data).type == 'item' then 
+            local data = json.decode(result[1].data)
+            local xPlayer = GetPlayer(source)
+            if FrameworkFound == 'esx' then 
+                xPlayer.addInventoryItem(data.item, data.amount)
+            elseif FrameworkFound == 'qbcore' then
+                xPlayer.Functions.AddItem(data.item, data.amount)
+            end
         end
         TriggerClientEvent('ricky-reward:updateUserReward', source)
     end)
@@ -211,6 +219,8 @@ Citizen.CreateThread(function()
             name = name,
             identifier = identifier,
         }
+
+        print(ESX.DumpTable(data))
     
         if not SonoStaff(source) then 
             return 
@@ -233,6 +243,8 @@ Citizen.CreateThread(function()
             elseif data.account == 'black_money' then
                 data.accountLabel = Config.Locales['black_money']
             end
+        elseif data.type == 'item' then 
+            data.typeLabel = Config.Locales['item_label']
         end
     
         MySQL.Sync.execute("INSERT INTO ricky_reward (code, data, staffInfo, date, userInfo) VALUES(@code, @data, @staffInfo, @date, @userInfo)", {
