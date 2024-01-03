@@ -10,6 +10,8 @@ const app = new Vue({
         customMessage : '',
         car : '',
         customplate : '',
+        item : '',
+        itemAmount : '',
         selectedReward : 0,
         moneyTypeSelected : 0,
 
@@ -31,6 +33,10 @@ const app = new Vue({
             {
                 label : "Car",
                 id : "car"
+            },
+            {
+                label : "Item",
+                id : "item"
             },
         ],
 
@@ -163,6 +169,8 @@ const app = new Vue({
                 this.changeScreen('moneytwo')
             } else if(this.selectedReward == 1) { // Car
                 this.changeScreen('cartwo')
+            } else if(this.selectedReward == 2) { // Item
+                this.changeScreen('itemtwo')
             }
         },
 
@@ -206,6 +214,13 @@ const app = new Vue({
                     type : "car",
                     car : this.car,
                     plate : this.customplate,
+                    message : this.customMessage || this.locales.none
+                }
+            } else if(this.selectedReward == 2) {
+                data = {
+                    type : "item",
+                    item : this.item,
+                    amount : this.itemAmount,
                     message : this.customMessage || this.locales.none
                 }
             }
@@ -346,6 +361,18 @@ const app = new Vue({
                         cursor : "default"
                     }
                 }
+            } else if(type == 'item') {
+                if(this.item != '' && this.itemAmount != '') {
+                    return {
+                        filter : "grayscale(0%)",
+                        cursor : "pointer"
+                    }
+                } else {
+                    return {
+                        filter : "grayscale(100%)",
+                        cursor : "default"
+                    }
+                }
             }
         },
 
@@ -359,6 +386,12 @@ const app = new Vue({
                 }
             } else if(type == 'money') {
                 if(this.moneyInfo.amount != '') {
+                    return true
+                } else {
+                    return false
+                }
+            } else if(type == 'item') {
+                if(this.item != '' && this.itemAmount != '') {
                     return true
                 } else {
                     return false
