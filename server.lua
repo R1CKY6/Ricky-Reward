@@ -219,8 +219,6 @@ Citizen.CreateThread(function()
             name = name,
             identifier = identifier,
         }
-
-        print(ESX.DumpTable(data))
     
         if not SonoStaff(source) then 
             return 
